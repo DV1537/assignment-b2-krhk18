@@ -6,7 +6,7 @@ Figure::Figure(Shape *sPtr, int numberOfShapes)
     this->numberOfShapes = numberOfShapes;
     capacity = numberOfShapes;
     
-    shapePtr = new Polygon[capacity];
+    shapePtr = new Polygon[capacity];    //Since the program is only making polygons, and no other shapes will be created, I have assumed it is OK to make shapePtr point to Polygons.
     for(int i = 0; i < numberOfShapes; i++)
     {
         shapePtr[i] = sPtr[i];
@@ -110,6 +110,33 @@ Position* Figure::getBoundingBox()
     cornerPtr[1] = bottomRight;
 
     return cornerPtr;
+}
+
+void Figure::getClosest(const Shape &location, int n) //returns n closest shapes to the location. Make sure that a Shape can be x,y coordinates as well, i.e. a point
+{
+    //3. Sort shapePtr med avseende på distance to first (skip first)
+    //4. Dynamically allocate array of 3 shapes (polygons)
+    //5. Save 3 first polygons in the array
+    //6. Return the array.
+
+    bool swapped;
+    do
+    {
+        swapped = false;
+        for(int i = 1; i < numberOfShapes - 1; i++)
+        {
+            double distanceCurrent = shapePtr[i].distance(&shapePtr[0]);
+            double distanceNext = shapePtr[i + 1].distance(&shapePtr[0]);
+            if(distanceCurrent > distanceNext)
+            {
+                Polygon tempPoly = static_cast<Polygon>(shapePtr[i]);
+                shapePtr[i] = shapePtr[i + 1];
+                shapePtr[i + 1] = tempPoly;
+                swapped = true;
+            }
+        }
+    }while(swapped);
+
 }
 
 //This is for printing the types of the shapes (polygons) stored in "Figure".

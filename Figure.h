@@ -15,6 +15,7 @@ class Figure
         ~Figure();
         void addShape(const Shape &shape);
         Position* getBoundingBox();
+        void getClosest(const Shape &location, int n);
         friend std::ostream &operator<<(std::ostream &out, const Figure &figure);
 };
 
