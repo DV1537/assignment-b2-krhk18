@@ -9,6 +9,14 @@
 #include "Polygon.h"
 #include "Figure.h"
 
+/*
+See comment in B1. I have read in the shapes and stored them,
+not using "addShape" when I created a Figure.
+
+Here in B2 (different from B1) I am only using the shapes presented in the file,
+to find out the closest shapes.
+*/
+
 int main(int argc, const char * argv[])
 {
     int capacityNumbers = 1;
@@ -109,35 +117,15 @@ int main(int argc, const char * argv[])
 
     inputFile.close();
 
-    //Add all read polygons together
-    Polygon addedPolygon;
-    for(int i = 0; i < numberOfShapes; i++)
-    {
-        addedPolygon = addedPolygon + polygonPtr[i];
-    }
-
-    //Print area with 3 decimal digits    
-    double area = addedPolygon.area();
-    area = round(area * 1000) / 1000;
-    std::cout << area << std::endl;
-
     //Create Figure
     Figure myFigure(polygonPtr, numberOfShapes);
 
-    //Print types in myFigure
-    std::cout << "Types of myFigure\n";
-    std::cout << myFigure;
-
     //Create polygon and add to figure + print new types of myFigure
     Position positionOne(2, 3), positionTwo(2, 5);
-
     Position positionArray[2] = {positionOne, positionTwo};
 
     Polygon polyToAdd(positionArray, 2);
     myFigure.addShape(polyToAdd);
-
-    std::cout << "Types of myFigure\n";
-    std::cout << myFigure;
 
     //Call boundingBox and store returned pointer to positions
     Position *boundingBoxPtr;
