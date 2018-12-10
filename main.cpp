@@ -9,14 +9,6 @@
 #include "Polygon.h"
 #include "Figure.h"
 
-/*
-See comment in B1. I have read in the shapes and stored them,
-not using "addShape" when I created a Figure.
-
-Here in B2 (different from B1) I am only using the shapes presented in the file,
-to find out the closest shapes.
-*/
-
 int main(int argc, const char * argv[])
 {
     int capacityNumbers = 1;
@@ -31,6 +23,8 @@ int main(int argc, const char * argv[])
     int capacityPolygons = 1;
     Polygon *polygonPtr = new Polygon[capacityPolygons];
     int numberOfShapes;
+    Figure myFigure;
+    double xCoord, yCoord;
 
     inputFile.open(argv[1]);
 
@@ -92,21 +86,8 @@ int main(int argc, const char * argv[])
 
                 //Create polygon object
                 Polygon myPolygonObject(positionPtr, numberOfCoordinates);
-
-                //Store polygon object in polygonPtr (by first increasing the size if needed)
-                if(numberOfShapes >= capacityPolygons)
-                {
-                    capacityPolygons += 1;
-                    Polygon *tempPtr = new Polygon[capacityPolygons];  //Create new, bigger
-                    for(int i = 0; i < capacityPolygons - 1; i++)      //move
-                    {
-                        tempPtr[i] = polygonPtr[i];
-                    }
-                    delete []polygonPtr;                //delete old content
-                    polygonPtr = tempPtr;               //make pointer point to new array
-                    tempPtr = nullptr;
-                }
-                polygonPtr[numberOfShapes] = myPolygonObject;
+                myFigure.addShape(myPolygonObject);
+                
                 numberOfShapes++;
 
                 numberOfElements = 0;
@@ -117,23 +98,21 @@ int main(int argc, const char * argv[])
 
     inputFile.close();
 
-    //Create Figure
-    Figure myFigure(polygonPtr, numberOfShapes);
-
     //Call getClosest and store returned pointer to polygons
     Polygon *closestPtr;
     closestPtr = myFigure.getClosest(polygonPtr[0], 3);
 
     //Round to 3 decimal digits and print 3 closest shapes
+    int sizeOfPolygon;
     for(int i = 0; i < 3; i++)
     {
         for(int j = 0; j < closestPtr[i].getNrOfPositions(); j++)
         {
-            int sizeOfPolygon = closestPtr[i].getNrOfPositions();
+            sizeOfPolygon = closestPtr[i].getNrOfPositions();
             Position *tempPositions = new Position[sizeOfPolygon];
             closestPtr[i].getPositions(tempPositions);
-            double xCoord = roundf(tempPositions[j].xCoord * 1000) / 1000;
-            double yCoord = roundf(tempPositions[j].yCoord * 1000) / 1000;
+            xCoord = roundf(tempPositions[j].xCoord * 1000) / 1000;
+            yCoord = roundf(tempPositions[j].yCoord * 1000) / 1000;
             std::cout << xCoord << " " << yCoord << " ";
 
             delete []tempPositions;

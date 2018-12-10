@@ -1,18 +1,8 @@
 #include <iostream>
 #include "Figure.h"
 
-Figure::Figure(Polygon *pPtr, int numberOfShapes)
+Figure::Figure() : polygonPtr(nullptr), numberOfShapes(0), capacity(0)
 {
-    this->numberOfShapes = numberOfShapes;
-    capacity = numberOfShapes;
-    
-    //Since the program is only making polygons, and no other shapes will be created,
-    //I have spoken to Eriks and assumed it is OK to use only Polygons and pointer to polygons.
-    polygonPtr = new Polygon[capacity];
-    for(int i = 0; i < numberOfShapes; i++)
-    {
-        polygonPtr[i] = pPtr[i];
-    }
 }
 
 Figure::~Figure()
@@ -105,7 +95,8 @@ Position* Figure::getBoundingBox()
     return cornerPtr;
 }
 
-Polygon *Figure::getClosest(Polygon &location, int n) //returns n closest shapes to the location. Make sure that a Shape can be x,y coordinates as well, i.e. a point
+//Returns n closest shapes to the location.
+Polygon *Figure::getClosest(Polygon &location, int n)
 {
     //1. Sort polygonPtr med avseende på distance to location
     //2. Dynamically allocate array of n shapes (polygons)
