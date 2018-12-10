@@ -121,6 +121,7 @@ Polygon *Figure::getClosest(Polygon &location, int n) //returns n closest shapes
 
     //Sort
     bool swapped;
+    Polygon tempPoly;
     do
     {
         swapped = false;
@@ -130,7 +131,7 @@ Polygon *Figure::getClosest(Polygon &location, int n) //returns n closest shapes
             double distanceNext = polygonPtr[i + 1].distance(&location);
             if(distanceNext < distanceCurrent)
             {
-                Polygon tempPoly = polygonPtr[i];
+                tempPoly = polygonPtr[i];
                 polygonPtr[i] = polygonPtr[i + 1];
                 polygonPtr[i + 1] = tempPoly;
                 swapped = true;
