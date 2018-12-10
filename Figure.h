@@ -7,15 +7,15 @@
 class Figure
 {
     private:
-        Shape *shapePtr;
+        Polygon *polygonPtr;
         int numberOfShapes;
         int capacity;
     public:
-        Figure(Shape *shapePtr, int numberOfShapes);
+        Figure(Polygon *polygonPtr, int numberOfShapes);
         ~Figure();
-        void addShape(const Shape &shape);
+        void addShape(const Polygon &polygon);
         Position* getBoundingBox();
-        void getClosest(const Shape &location, int n);
+        Polygon *getClosest(Polygon &location, int n);
         friend std::ostream &operator<<(std::ostream &out, const Figure &figure);
 };
 

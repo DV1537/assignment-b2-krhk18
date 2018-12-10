@@ -1,42 +1,42 @@
 #include <iostream>
 #include "Figure.h"
 
-Figure::Figure(Shape *sPtr, int numberOfShapes)
+Figure::Figure(Polygon *pPtr, int numberOfShapes)
 {
     this->numberOfShapes = numberOfShapes;
     capacity = numberOfShapes;
     
-    shapePtr = new Polygon[capacity];    //Since the program is only making polygons, and no other shapes will be created, I have assumed it is OK to make shapePtr point to Polygons.
+    polygonPtr = new Polygon[capacity];    //Since the program is only making polygons, and no other shapes will be created, I have assumed it is OK to make polygonPtr point to Polygons.
     for(int i = 0; i < numberOfShapes; i++)
     {
-        shapePtr[i] = sPtr[i];
+        polygonPtr[i] = pPtr[i];
     }
 }
 
 Figure::~Figure()
 {
-    if(shapePtr)
+    if(polygonPtr)
     {
-        delete[] shapePtr;
-        shapePtr = nullptr;
+        delete[] polygonPtr;
+        polygonPtr = nullptr;
     }
 }
 
-void Figure::addShape(const Shape &shape)
+void Figure::addShape(const Polygon &polygon)
 {
     if(numberOfShapes >= capacity)
     {
         capacity += 1;
-        Shape *tempPtr = new Polygon[capacity];
+        Polygon *tempPtr = new Polygon[capacity];
         for(int i = 0; i < numberOfShapes; i++)
         {
-            tempPtr[i] = shapePtr[i];
+            tempPtr[i] = polygonPtr[i];
         }
-        delete[] shapePtr;
-        shapePtr = tempPtr;
+        delete[] polygonPtr;
+        polygonPtr = tempPtr;
         tempPtr = nullptr;
     }
-    shapePtr[numberOfShapes] = shape;
+    polygonPtr[numberOfShapes] = polygon;
     numberOfShapes++;
 }
 
@@ -56,10 +56,10 @@ Position* Figure::getBoundingBox()
     for(int i = 0; i < numberOfShapes; i++)
     {
         //Create new pointer for positions in current polygon
-        int numberOfPositions = shapePtr[i].getNrOfPositions();
+        int numberOfPositions = polygonPtr[i].getNrOfPositions();
         Position *tempPositionPtr = new Position[numberOfPositions];
         //Get positions of current polygon
-        shapePtr[i].getPositions(tempPositionPtr);
+        polygonPtr[i].getPositions(tempPositionPtr);
         for(int t = 0; t < numberOfPositions; t++)
             std::cout << "X: " << tempPositionPtr[t].xCoord << ", Y: " << tempPositionPtr[t].yCoord << std::endl;
         std::cout << "------------\n";
@@ -112,30 +112,40 @@ Position* Figure::getBoundingBox()
     return cornerPtr;
 }
 
-void Figure::getClosest(const Shape &location, int n) //returns n closest shapes to the location. Make sure that a Shape can be x,y coordinates as well, i.e. a point
+Polygon *Figure::getClosest(Polygon &location, int n) //returns n closest shapes to the location. Make sure that a Shape can be x,y coordinates as well, i.e. a point
 {
-    //3. Sort shapePtr med avseende på distance to first (skip first)
-    //4. Dynamically allocate array of 3 shapes (polygons)
-    //5. Save 3 first polygons in the array
-    //6. Return the array.
+    //1. Sort polygonPtr med avseende på distance to location
+    //2. Dynamically allocate array of n shapes (polygons)
+    //3. Save n first polygons in the array
+    //4. Return the array.
 
+    //Sort
     bool swapped;
     do
     {
         swapped = false;
-        for(int i = 1; i < numberOfShapes - 1; i++)
+        for(int i = 0; i < numberOfShapes - 1; i++)
         {
-            double distanceCurrent = shapePtr[i].distance(&shapePtr[0]);
-            double distanceNext = shapePtr[i + 1].distance(&shapePtr[0]);
-            if(distanceCurrent > distanceNext)
+            double distanceCurrent = polygonPtr[i].distance(&location);
+            double distanceNext = polygonPtr[i + 1].distance(&location);
+            if(distanceNext < distanceCurrent)
             {
-                Polygon tempPoly = static_cast<Polygon>(shapePtr[i]);
-                shapePtr[i] = shapePtr[i + 1];
-                shapePtr[i + 1] = tempPoly;
+                Polygon tempPoly = polygonPtr[i];
+                polygonPtr[i] = polygonPtr[i + 1];
+                polygonPtr[i + 1] = tempPoly;
                 swapped = true;
             }
         }
     }while(swapped);
+
+    //Save the n closest shapes (polygons) in "closestPtr" (of size n) and return.
+    Polygon *closestPtr = new Polygon[n];
+    for(int i = 0; i < n; i++)
+    {
+        closestPtr[i] = polygonPtr[i + 1];
+    }
+
+    return closestPtr;
 
 }
 
@@ -145,7 +155,7 @@ std::ostream &operator<<(std::ostream &out, const Figure &figure)
     //Print type
     for(int i = 0; i < figure.numberOfShapes; i++)
     {
-        out << figure.shapePtr[i].getType() << "\n";
+        out << figure.polygonPtr[i].getType() << "\n";
     }
     return out;   
 }

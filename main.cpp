@@ -152,6 +152,15 @@ int main(int argc, const char * argv[])
     }
     std::cout << std::endl;
 
+    //Call getClosest and store returned pointer to polygons
+    Polygon *closestPtr;
+    closestPtr = myFigure.getClosest(polygonPtr[0], 3);
+
+    for(int i = 0; i < 3; i++)
+    {
+        std::cout << closestPtr[i] << std::endl;
+    }
+
     //Free memory
     delete []boundingBoxPtr;
     boundingBoxPtr = nullptr;
