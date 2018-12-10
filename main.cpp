@@ -120,39 +120,29 @@ int main(int argc, const char * argv[])
     //Create Figure
     Figure myFigure(polygonPtr, numberOfShapes);
 
-    //Create polygon and add to figure + print new types of myFigure
-    Position positionOne(2, 3), positionTwo(2, 5);
-    Position positionArray[2] = {positionOne, positionTwo};
-
-    Polygon polyToAdd(positionArray, 2);
-    myFigure.addShape(polyToAdd);
-
-    //Call boundingBox and store returned pointer to positions
-    Position *boundingBoxPtr;
-    boundingBoxPtr = myFigure.getBoundingBox();
-
-    //Round to 3 decimal digits and print boundingbox corners coordinates
-    for(int i = 0; i < 2; i++)
-    {
-        double xCoord = roundf(boundingBoxPtr[i].xCoord * 1000) / 1000;
-        double yCoord = roundf(boundingBoxPtr[i].yCoord * 1000) / 1000;
-        std::cout << xCoord << " " << yCoord << " ";
-    }
-    std::cout << std::endl;
-
     //Call getClosest and store returned pointer to polygons
     Polygon *closestPtr;
     closestPtr = myFigure.getClosest(polygonPtr[0], 3);
 
+    //Round to 3 decimal digits and print 3 closest shapes
     for(int i = 0; i < 3; i++)
     {
-        std::cout << closestPtr[i] << std::endl;
+        for(int j = 0; j < closestPtr[i].getNrOfPositions(); j++)
+        {
+            int sizeOfPolygon = closestPtr[i].getNrOfPositions();
+            Position *tempPositions = new Position[sizeOfPolygon];
+            closestPtr[i].getPositions(tempPositions);
+            double xCoord = roundf(tempPositions[j].xCoord * 1000) / 1000;
+            double yCoord = roundf(tempPositions[j].yCoord * 1000) / 1000;
+            std::cout << xCoord << " " << yCoord << " ";
+
+            delete []tempPositions;
+            tempPositions = nullptr;
+        }
+        std::cout << "\n";
     }
 
     //Free memory
-    delete []boundingBoxPtr;
-    boundingBoxPtr = nullptr;
-
     delete []numbersPtr;
     numbersPtr = nullptr;
     
