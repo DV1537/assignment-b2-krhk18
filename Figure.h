@@ -13,7 +13,8 @@ class Figure
     public:
         Figure();
         ~Figure();
-        void addShape(const Polygon &polygon);
+        void addShape(Polygon *polygon);
+        Position* getTotalBoundingBox();
         Position* getBoundingBox();
         Polygon *getClosest(Polygon &location, int n);
         friend std::ostream &operator<<(std::ostream &out, const Figure &figure);

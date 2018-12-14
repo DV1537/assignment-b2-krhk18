@@ -23,6 +23,8 @@ class Polygon : public Shape
         double area();
 
         double circumreference();
+
+        Position* getBoundingBox();
 };
 
 #endif

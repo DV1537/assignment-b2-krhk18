@@ -14,7 +14,7 @@ Figure::~Figure()
     }
 }
 
-void Figure::addShape(const Polygon &polygon)
+void Figure::addShape(Polygon *polygon)
 {
     if(numberOfShapes >= capacity)
     {
@@ -28,16 +28,12 @@ void Figure::addShape(const Polygon &polygon)
         polygonPtr = tempPtr;
         tempPtr = nullptr;
     }
-    polygonPtr[numberOfShapes] = polygon;
+    polygonPtr[numberOfShapes] = *polygon;
     numberOfShapes++;
 }
 
-/* Gets boundingbox top left and bottom right positions by
-looping trough the polygons in the figure and comparing
-the x- and y-coords to find the highest and lowest of each.
-top left = (lowest x-coord, highest y-coord)
-bottom right = (highest x-coord, lowest y-coord) */
-Position* Figure::getBoundingBox()
+// Gets boundingbox top left and bottom right positions
+Position* Figure::getTotalBoundingBox()
 {
     double xMin = 0.0;
     double yMin = 0.0;
@@ -47,43 +43,31 @@ Position* Figure::getBoundingBox()
     //Loop through Polygons in the Figure.
     for(int i = 0; i < numberOfShapes; i++)
     {
-        //Create new pointer for positions in current polygon
-        int numberOfPositions = polygonPtr[i].getNrOfPositions();
-        Position *tempPositionPtr = new Position[numberOfPositions];
-        //Get positions of current polygon
-        polygonPtr[i].getPositions(tempPositionPtr);
+        Position *tempPosPtr;
+        tempPosPtr = polygonPtr[i].getBoundingBox();
         
-        //Find min- and max- values of x and y
-        if(i == 0)
+        if(tempPosPtr[0].xCoord < xMin)
         {
-            xMin = xMax = tempPositionPtr[0].xCoord;
-            yMin = yMax = tempPositionPtr[0].yCoord;
+            xMin = tempPosPtr[0].xCoord;    //xMin
         }
-        for(int j = 0; j < numberOfPositions; j++)
+        if(tempPosPtr[0].yCoord > yMax)
         {
-            if(xMin > tempPositionPtr[j].xCoord)
-            {
-                xMin = tempPositionPtr[j].xCoord;
-            }
-            if(xMax < tempPositionPtr[j].xCoord)
-            {
-                xMax = tempPositionPtr[j].xCoord;
-            }
-            if(yMin > tempPositionPtr[j].yCoord)
-            {
-                yMin = tempPositionPtr[j].yCoord;
-            }
-            if(yMax < tempPositionPtr[j].yCoord)
-            {
-                yMax = tempPositionPtr[j].yCoord;
-            }
+            yMax = tempPosPtr[0].yCoord;    //yMax
         }
-        
+        if(tempPosPtr[1].xCoord > xMax)
+        {
+           xMax = tempPosPtr[1].xCoord;     //xMax 
+        }
+        if(tempPosPtr[1].yCoord < yMin)
+        {
+            tempPosPtr[1].yCoord;           //yMin
+        }
+                
         //Free memory
-        delete []tempPositionPtr;
-        tempPositionPtr = nullptr;
+        delete []tempPosPtr;
+        tempPosPtr = nullptr;
     }
-    
+
     //Make position top left corner (xMin, yMax) and bottom right corner (xMax, yMin)
     Position topLeft(xMin, yMax);
     Position bottomRight(xMax, yMin);

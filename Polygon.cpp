@@ -150,3 +150,41 @@ double Polygon::circumreference()
     }
     return circumference;
 }
+
+Position* Polygon::getBoundingBox()
+{
+    double xMin = posPtr[0].xCoord;
+    double yMin = posPtr[0].yCoord;
+    double xMax = posPtr[0].xCoord;
+    double yMax = posPtr[0].yCoord;
+
+    for(int i = 0; i < nrOfPositions; i++)
+    {
+        if(xMin > posPtr[i].xCoord)
+        {
+            xMin = posPtr[i].xCoord;
+        }
+        if(xMax < posPtr[i].xCoord)
+        {
+            xMax = posPtr[i].xCoord;
+        }
+        if(yMin > posPtr[i].yCoord)
+        {
+            yMin = posPtr[i].yCoord;
+        }
+        if(yMax < posPtr[i].yCoord)
+        {
+            yMax = posPtr[i].yCoord;
+        }
+    }
+
+    //Make position top left corner (xMin, yMax) and bottom right corner (xMax, yMin)
+    Position topLeft(xMin, yMax);
+    Position bottomRight(xMax, yMin);
+    
+    Position *cornerPtr = new Position[2];
+    cornerPtr[0] = topLeft;
+    cornerPtr[1] = bottomRight;
+
+    return cornerPtr;
+}
