@@ -1,11 +1,12 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-struct Position
+class Position
 {
-    double xCoord, yCoord;
-    Position();
-    Position(double x, double y);
+    public:
+        double xCoord, yCoord;
+        Position();
+        Position(double x, double y);
 };
 
 #endif

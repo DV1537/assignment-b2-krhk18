@@ -14,6 +14,7 @@ class Figure
         Figure();
         ~Figure();
         void addShape(Polygon *polygon);
+        Polygon getFirstPolygon();
         Position* getTotalBoundingBox();
         Position* getBoundingBox();
         Polygon *getClosest(Polygon &location, int n);

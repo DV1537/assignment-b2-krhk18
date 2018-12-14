@@ -32,6 +32,11 @@ void Figure::addShape(Polygon *polygon)
     numberOfShapes++;
 }
 
+Polygon Figure::getFirstPolygon()
+{
+    return polygonPtr[0];
+}
+
 // Gets boundingbox top left and bottom right positions
 Position* Figure::getTotalBoundingBox()
 {

@@ -14,15 +14,12 @@ int main(int argc, const char * argv[])
     int capacityNumbers = 1;
     double *numbersPtr = new double[capacityNumbers];
     Position *positionPtr = nullptr;
-    std::string type = "";
     std::ifstream inputFile;
     std::stringstream myStringStream;
-    std::string line;
+    std::string line = "";
     int numberOfCoordinates = 0;
-    int numberOfElements;
-    int capacityPolygons = 1;
-    Polygon *polygonPtr = new Polygon[capacityPolygons];
-    int numberOfShapes;
+    int numberOfElements = 0;
+    int numberOfShapes = 0;
     Figure myFigure;
     double xCoord, yCoord;
 
@@ -32,6 +29,7 @@ int main(int argc, const char * argv[])
     if(!inputFile)
     {
         std::cout << "Error opening file\n";
+        std::cin.get();
         exit(EXIT_FAILURE);
     }
     else
@@ -66,11 +64,13 @@ int main(int argc, const char * argv[])
             if(numberOfElements == 0 || !myStringStream.eof())
             {
                 std::cout << "Line number " << numberOfShapes + 1 << " is empty or contains non-numerical values\n";
+                std::cin.get();
                 exit(EXIT_FAILURE);
             }
             else if(numberOfElements % 2 == 1)
             {
                 std::cout << "Line number " << numberOfShapes + 1 << " contains an odd number of values\n";
+                std::cin.get();
                 exit(EXIT_FAILURE);
             }
             else
@@ -89,7 +89,7 @@ int main(int argc, const char * argv[])
                 myFigure.addShape(myPolygonObject);
                 delete myPolygonObject;
                 myPolygonObject = nullptr;
-                
+                                
                 numberOfShapes++;
 
                 numberOfElements = 0;
@@ -115,7 +115,8 @@ int main(int argc, const char * argv[])
 
     //Call getClosest and store returned pointer to polygons
     Polygon *closestPtr;
-    closestPtr = myFigure.getClosest(polygonPtr[0], 3);
+    Polygon firstPolygon = myFigure.getFirstPolygon();
+    closestPtr = myFigure.getClosest(firstPolygon, 3);
 
     //Round to 3 decimal digits and print 3 closest shapes
     int sizeOfPolygon;
@@ -142,12 +143,9 @@ int main(int argc, const char * argv[])
     
     delete []positionPtr;
     positionPtr = nullptr;
-    
-    delete []polygonPtr;
-    polygonPtr = nullptr;
 
     //Pause program
-    std::getchar();
+    std::cin.get();
 
     return 0;
 }
