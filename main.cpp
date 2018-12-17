@@ -100,19 +100,6 @@ int main(int argc, const char * argv[])
 
     inputFile.close();
 
-    //Call boundingBox and store returned pointer to positions
-    Position *boundingBoxPtr;
-    boundingBoxPtr = myFigure.getTotalBoundingBox();
-
-    //Round to 3 decimal digits and print boundingbox corners coordinates
-    for(int i = 0; i < 2; i++)
-    {
-        xCoord = roundf(boundingBoxPtr[i].xCoord * 1000) / 1000;
-        yCoord = roundf(boundingBoxPtr[i].yCoord * 1000) / 1000;
-        std::cout << xCoord << " " << yCoord << " ";
-    }
-    std::cout << std::endl;
-
     //Call getClosest and store returned pointer to polygons
     Polygon *closestPtr;
     Polygon firstPolygon = myFigure.getFirstPolygon();

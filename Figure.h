@@ -10,6 +10,7 @@ class Figure
         Polygon *polygonPtr;
         int numberOfShapes;
         int capacity;
+        void sort(Polygon &location, int n);
     public:
         Figure();
         ~Figure();

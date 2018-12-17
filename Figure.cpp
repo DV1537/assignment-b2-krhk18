@@ -14,6 +14,30 @@ Figure::~Figure()
     }
 }
 
+void Figure::sort(Polygon &location, int n)
+{
+    Polygon tempPoly;
+    if(n == 0)
+        return;
+    //Swap the two elements if i is larger than i + 1
+    for (int i = 0; i < n - 1; i++)
+    {
+        double distanceCurrent = polygonPtr[i].distance(&location);
+        double distanceNext = polygonPtr[i + 1].distance(&location);
+        if(distanceCurrent > distanceNext)
+        {
+            tempPoly = polygonPtr[i];
+            polygonPtr[i] = polygonPtr[i + 1];
+            polygonPtr[i + 1] = tempPoly;
+        }
+    }
+    // recursive call
+    if(n - 1 > 1)
+    {
+        sort(location, n - 1);
+    }
+} 
+
 void Figure::addShape(Polygon *polygon)
 {
     if(numberOfShapes >= capacity)
@@ -93,24 +117,7 @@ Polygon *Figure::getClosest(Polygon &location, int n)
     //4. Return the array.
 
     //Sort
-    bool swapped;
-    Polygon tempPoly;
-    do
-    {
-        swapped = false;
-        for(int i = 0; i < numberOfShapes - 1; i++)
-        {
-            double distanceCurrent = polygonPtr[i].distance(&location);
-            double distanceNext = polygonPtr[i + 1].distance(&location);
-            if(distanceNext < distanceCurrent)
-            {
-                tempPoly = polygonPtr[i];
-                polygonPtr[i] = polygonPtr[i + 1];
-                polygonPtr[i + 1] = tempPoly;
-                swapped = true;
-            }
-        }
-    }while(swapped);
+    sort(location, numberOfShapes);
 
     //Save the n closest shapes (polygons) in "closestPtr" (of size n) and return.
     Polygon *closestPtr = new Polygon[n];
