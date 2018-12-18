@@ -11,6 +11,10 @@
 
 int main(int argc, const char * argv[])
 {
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc(231);
+
+
     int capacityNumbers = 1;
     double *numbersPtr = new double[capacityNumbers];
     Position *positionPtr = nullptr;
@@ -22,6 +26,7 @@ int main(int argc, const char * argv[])
     int numberOfShapes = 0;
     Figure myFigure;
     double xCoord, yCoord;
+	Polygon firstPolygon;
 
     inputFile.open(argv[1]);
 
@@ -86,7 +91,17 @@ int main(int argc, const char * argv[])
 
                 //Create pointer to polygon object
                 Polygon *myPolygonObject = new Polygon(positionPtr, numberOfCoordinates);
+				
+				//store if first;
+				if (numberOfShapes == 0)
+				{
+					firstPolygon = *myPolygonObject;
+				}
+
+				//add to myFigure
                 myFigure.addShape(myPolygonObject);
+
+				//free
                 delete myPolygonObject;
                 myPolygonObject = nullptr;
                                 
@@ -102,7 +117,8 @@ int main(int argc, const char * argv[])
 
     //Call getClosest and store returned pointer to polygons
     Polygon *closestPtr;
-    Polygon firstPolygon = myFigure.getFirstPolygon();
+    //Polygon firstPolygon;
+    //firstPolygon = myFigure.getFirstPolygon();
     closestPtr = myFigure.getClosest(firstPolygon, 3);
 
     //Round to 3 decimal digits and print 3 closest shapes

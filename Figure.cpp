@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Figure.h"
+#include "Functions.h"
 
 Figure::Figure() : polygonPtr(nullptr), numberOfShapes(0), capacity(0)
 {
@@ -13,30 +14,6 @@ Figure::~Figure()
         polygonPtr = nullptr;
     }
 }
-
-void Figure::sort(Polygon &location, int n)
-{
-    Polygon tempPoly;
-    if(n == 0)
-        return;
-    //Swap the two elements if i is larger than i + 1
-    for (int i = 0; i < n - 1; i++)
-    {
-        double distanceCurrent = polygonPtr[i].distance(&location);
-        double distanceNext = polygonPtr[i + 1].distance(&location);
-        if(distanceCurrent > distanceNext)
-        {
-            tempPoly = polygonPtr[i];
-            polygonPtr[i] = polygonPtr[i + 1];
-            polygonPtr[i + 1] = tempPoly;
-        }
-    }
-    // recursive call
-    if(n - 1 > 1)
-    {
-        sort(location, n - 1);
-    }
-} 
 
 void Figure::addShape(Polygon *polygon)
 {
@@ -111,13 +88,8 @@ Position* Figure::getTotalBoundingBox()
 //Returns n closest shapes to the location.
 Polygon *Figure::getClosest(Polygon &location, int n)
 {
-    //1. Sort polygonPtr med avseende på distance to location
-    //2. Dynamically allocate array of n shapes (polygons)
-    //3. Save n first polygons in the array
-    //4. Return the array.
-
-    //Sort
-    sort(location, numberOfShapes);
+	//Sort med avseende på distance to location
+    sort(polygonPtr, 0, numberOfShapes - 1, location);
 
     //Save the n closest shapes (polygons) in "closestPtr" (of size n) and return.
     Polygon *closestPtr = new Polygon[n];
@@ -127,7 +99,6 @@ Polygon *Figure::getClosest(Polygon &location, int n)
     }
 
     return closestPtr;
-
 }
 
 //This is for being able to print the types of the shapes (polygons) stored in "Figure".
@@ -139,5 +110,5 @@ std::ostream &operator<<(std::ostream &out, const Figure &figure)
     {
         out << figure.polygonPtr[i].getType() << "\n";
     }
-    return out;   
+    return out;
 }
