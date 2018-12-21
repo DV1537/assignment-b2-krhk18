@@ -15,9 +15,8 @@ class Figure
         ~Figure();
         void addShape(Polygon *polygon);
         Polygon getFirstPolygon();
-        Position* getTotalBoundingBox();
-        Position* getBoundingBox();
-        Polygon *getClosest(Polygon &location, int n);
+        BoundingBox getTotalBoundingBox();
+        void getClosest(Polygon *closestPolygons, Polygon &location, int n);
         friend std::ostream &operator<<(std::ostream &out, const Figure &figure);
 };
 

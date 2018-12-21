@@ -89,9 +89,6 @@ Polygon operator+(const Polygon &polygonOne, const Polygon &polygonTwo)
 
 std::ostream &operator<<(std::ostream &out, const Polygon &polygon)
 {
-    //Print type
-    out << polygon.type << "\n";
-    
     //Print x- and y-coords
     for(int i = 0; i < polygon.nrOfPositions; i++)
     {
@@ -101,8 +98,9 @@ std::ostream &operator<<(std::ostream &out, const Polygon &polygon)
         double yCoord = polygon.posPtr[i].yCoord;
         yCoord = roundf(yCoord * 1000) / 1000;
         
-        out << "X: " << xCoord << ", Y: " << yCoord << std::endl;
+        out << xCoord << " " << yCoord << " ";
     }
+    out << " ";
     
     return out;   
 }
@@ -151,7 +149,7 @@ double Polygon::circumreference()
     return circumference;
 }
 
-Position* Polygon::getBoundingBox()
+BoundingBox Polygon::getBoundingBox()
 {
     double xMin = posPtr[0].xCoord;
     double yMin = posPtr[0].yCoord;
@@ -181,10 +179,10 @@ Position* Polygon::getBoundingBox()
     //Make position top left corner (xMin, yMax) and bottom right corner (xMax, yMin)
     Position topLeft(xMin, yMax);
     Position bottomRight(xMax, yMin);
-    
-    Position *cornerPtr = new Position[2];
-    cornerPtr[0] = topLeft;
-    cornerPtr[1] = bottomRight;
 
-    return cornerPtr;
+	BoundingBox boundingBox;
+	boundingBox.topLeft = topLeft;
+	boundingBox.bottomRight = bottomRight;
+
+	return boundingBox;
 }

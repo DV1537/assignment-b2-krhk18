@@ -39,66 +39,60 @@ Polygon Figure::getFirstPolygon()
 }
 
 // Gets boundingbox top left and bottom right positions
-Position* Figure::getTotalBoundingBox()
+BoundingBox Figure::getTotalBoundingBox()
 {
-    double xMin = 0.0;
-    double yMin = 0.0;
-    double xMax = 0.0;
-    double yMax = 0.0;
+	double xMin = 0.0;
+	double yMin = 0.0;
+	double xMax = 0.0;
+	double yMax = 0.0;
 
-    //Loop through Polygons in the Figure.
-    for(int i = 0; i < numberOfShapes; i++)
-    {
-        Position *tempPosPtr;
-        tempPosPtr = polygonPtr[i].getBoundingBox();
-        
-        if(tempPosPtr[0].xCoord < xMin)
-        {
-            xMin = tempPosPtr[0].xCoord;    //xMin
-        }
-        if(tempPosPtr[0].yCoord > yMax)
-        {
-            yMax = tempPosPtr[0].yCoord;    //yMax
-        }
-        if(tempPosPtr[1].xCoord > xMax)
-        {
-           xMax = tempPosPtr[1].xCoord;     //xMax 
-        }
-        if(tempPosPtr[1].yCoord < yMin)
-        {
-            tempPosPtr[1].yCoord;           //yMin
-        }
-                
-        //Free memory
-        delete []tempPosPtr;
-        tempPosPtr = nullptr;
-    }
+	//Loop through Polygons in the Figure.
+	for (int i = 0; i < numberOfShapes; i++)
+	{
+		BoundingBox boundingBox;
+		boundingBox = polygonPtr[i].getBoundingBox();
 
-    //Make position top left corner (xMin, yMax) and bottom right corner (xMax, yMin)
-    Position topLeft(xMin, yMax);
-    Position bottomRight(xMax, yMin);
-    
-    Position *cornerPtr = new Position[2];
-    cornerPtr[0] = topLeft;
-    cornerPtr[1] = bottomRight;
+		if (boundingBox.topLeft.xCoord < xMin)
+		{
+			xMin = boundingBox.topLeft.xCoord;    //xMin
+		}
+		if (boundingBox.topLeft.yCoord > yMax)
+		{
+			yMax = boundingBox.topLeft.yCoord;    //yMax
+		}
+		if (boundingBox.bottomRight.xCoord > xMax)
+		{
+			xMax = boundingBox.bottomRight.xCoord;     //xMax 
+		}
+		if (boundingBox.bottomRight.yCoord < yMin)
+		{
+			boundingBox.bottomRight.yCoord;           //yMin
+		}
+	}
 
-    return cornerPtr;
+	//Make position top left corner (xMin, yMax) and bottom right corner (xMax, yMin)
+	Position topLeft(xMin, yMax);
+	Position bottomRight(xMax, yMin);
+
+	BoundingBox boundingBox;
+	boundingBox.topLeft = topLeft;
+	boundingBox.bottomRight = bottomRight;
+
+	return boundingBox;
 }
 
 //Returns n closest shapes to the location.
-Polygon *Figure::getClosest(Polygon &location, int n)
+void Figure::getClosest(Polygon *closestPolygons, Polygon &location, int n)
 {
 	//Sort med avseende på distance to location
     sort(polygonPtr, 0, numberOfShapes - 1, location);
 
-    //Save the n closest shapes (polygons) in "closestPtr" (of size n) and return.
-    Polygon *closestPtr = new Polygon[n];
+    //Save the n closest shapes (polygons) in "closestPolygons".
+    //Polygon *closestPtr = new Polygon[n];
     for(int i = 0; i < n; i++)
     {
-        closestPtr[i] = polygonPtr[i + 1];
+        closestPolygons[i] = polygonPtr[i + 1];
     }
-
-    return closestPtr;
 }
 
 //This is for being able to print the types of the shapes (polygons) stored in "Figure".

@@ -12,7 +12,7 @@
 int main(int argc, const char * argv[])
 {
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(231);
+
 
 
     int capacityNumbers = 1;
@@ -88,9 +88,10 @@ int main(int argc, const char * argv[])
                     positionPtr[i].xCoord = numbersPtr[2 * i];
                     positionPtr[i].yCoord = numbersPtr[2 * i + 1];
                 }
-
-                //Create pointer to polygon object
+				//Create pointer to polygon object
                 Polygon *myPolygonObject = new Polygon(positionPtr, numberOfCoordinates);
+				delete[]positionPtr;
+				positionPtr = nullptr;
 				
 				//store if first;
 				if (numberOfShapes == 0)
@@ -116,36 +117,19 @@ int main(int argc, const char * argv[])
     inputFile.close();
 
     //Call getClosest and store returned pointer to polygons
-    Polygon *closestPtr;
+	const int n = 3;
+	Polygon closestPolygons[n];
     //Polygon firstPolygon;
     //firstPolygon = myFigure.getFirstPolygon();
-    closestPtr = myFigure.getClosest(firstPolygon, 3);
+	myFigure.getClosest(closestPolygons, firstPolygon, n);
 
-    //Round to 3 decimal digits and print 3 closest shapes
-    int sizeOfPolygon;
-    for(int i = 0; i < 3; i++)
-    {
-        for(int j = 0; j < closestPtr[i].getNrOfPositions(); j++)
-        {
-            sizeOfPolygon = closestPtr[i].getNrOfPositions();
-            Position *tempPositions = new Position[sizeOfPolygon];
-            closestPtr[i].getPositions(tempPositions);
-            xCoord = roundf(tempPositions[j].xCoord * 1000) / 1000;
-            yCoord = roundf(tempPositions[j].yCoord * 1000) / 1000;
-            std::cout << xCoord << " " << yCoord << " ";
-
-            delete []tempPositions;
-            tempPositions = nullptr;
-        }
-        std::cout << "\n";
-    }
+	for (int i = 0; i < n; i++)
+	{
+		std::cout << closestPolygons[i] << std::endl;
+	}
 
     //Free memory
     delete []numbersPtr;
-    numbersPtr = nullptr;
-    
-    delete []positionPtr;
-    positionPtr = nullptr;
 
     //Pause program
     std::cin.get();

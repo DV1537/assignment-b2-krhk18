@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include "Shape.h"
+#include "BoundingBox.h"
 
 class Polygon : public Shape
 {
@@ -24,7 +25,7 @@ class Polygon : public Shape
 
         double circumreference();
 
-        Position* getBoundingBox();
+        BoundingBox getBoundingBox();
 };
 
 #endif
